@@ -3,6 +3,11 @@ from datetime import datetime
 
 #classe são receitas que ensinam o python a criar um objeto 
 
+class BankingError(Exception): pass
+class NegativeAmountError(BankingError): pass
+class InsuficientFoundsError(BankingError): pass
+
+
 class account :
     """
     Representa uma conta bancárias simples. 
@@ -27,16 +32,18 @@ class account :
         self._balance = float(initial_balance)
         self.created_at = datetime.now().isoformat(timespec="seconds")
         self.__str__ = f"Account of {owner}"
+
+        if hasattr(self.customer, "add_account"): 
+            self.customer.add_account(self)
         
-        print(f"[INFO] Account created for {self.owner} in {self.created_at}")
+        print(f"[INFO] Account created for {self.customer} in {self.created_at}")
     
     
     
     def deposit(self, amount: (float, int)) -> None: 
         """lindo"""
         if amount <= 0: 
-            print("[ERROR] Deposit must be positive.")
-            return
+            raise NegativeAmountError("[ERROR] Withdrawal must be positive.")
         self._balance += amount
         print(f"[OK] Deposited {amount: .2f} {self.currency}. New balance {self._balance: .2f}")
     
@@ -45,13 +52,12 @@ class account :
     def withdraw(self, amount: (float, int)) -> None: 
         """lindo"""
         if amount <= 0: 
-            print("[ERROR] Withdrawal must be positive.")
-            return
+            raise NegativeAmountError("[ERROR] Withdrawal must be positive.")
         if amount > self._balance:
-            print("[ERROR] Insufficient fund.")
-            return
+            raise InsuficientFoundsError("[ERROR] Insufficient fund.")
         self._balance -= amount
-        print(f"[OK] Withdrawal {amount: .2f} {self.currency}. New balance {self._balance: .2f}")
+
+        return self.balance
     
     @property
     def balance(self): 
@@ -60,18 +66,12 @@ class account :
     @balance.setter
     def balance(self, new_balance: float) -> float:
         if new_balance != new_balance :
-            print("[ERROR] Balance cannot be set to NoN.")
-            return
+            raise BankingError("[ERROR] Balance cannot be set to NoN.")
         self._balance = float(new_balance)
     
-        
-    def show_balance(self) -> None: 
-        print("#"*40)
-        print(f"Owner: {self.owner}")
-        print(f"Currency: {self.currency}")
-        print(f"Balance: {self._balance}")
-        print(f"Created at: {self.created_at}")
-        print("#"*40)
+    def __str__(self) -> str: 
+        return f"Account (owner = {self.customer}), currency = {self.currency}, balance = {self.balance}"
+
 
 
 class customer: 
@@ -82,8 +82,8 @@ class customer:
         self._account = list[account] = []
         pass
 
-    def add_account(self, account: account()): 
-        if account not in self.accounts 
+    def add_account(self, account: account): 
+        if account not in self.accounts:
             self._account.append(account)
         pass
     
@@ -98,6 +98,5 @@ acc1 = account("gabriel", "BRL", 20)
 
 acc1.deposit(1000)
 acc1.withdraw(1015)
-acc1.show_balance()
 acc1._balance += 10
 print(acc1)
