@@ -1,0 +1,56 @@
+class Animal: 
+    def __init__(self, nome, especie):
+        self.nome = nome 
+        self.especie = especie 
+
+    def __str__(self):
+        return f"{self.nome} é da espécie {self.especie}"
+    
+    def morrer(self): 
+        return f"{self.nome} morreu."
+    
+class Cachorro(Animal): 
+    def __init__(self, nome, raca):
+        super().__init__(nome, especie= "cachorro") 
+        self.raca = raca 
+    
+    def __str__(self):
+        return f"{self.nome} é da raça {self.raca}"
+    
+    def __repr__(self): 
+        class_ = type(self).__name__ 
+        return (
+            f"{class_}(nome = {self.nome!r}),"
+            f"(raça = {self.raca!r}),"
+            f"(espécie = {self.especie!r})"
+        )
+    def morrer(self): 
+        return f"{self.nome} foi para a fazenda aonda viverá feliz para sempre"
+    
+    def latir(self): 
+        return f"{self.nome} está latindo."
+    
+class Gato(Animal): 
+    def __init__(self, nome, raca):
+        super().__init__(nome, especie= "gato") 
+        self.raca = raca 
+
+    def morrer(self): 
+        return f"{self.nome} nunca esgota suas 7 vidas"
+    
+    def miar(self): 
+        return f"{self.nome} está miando."
+    
+
+Cachorro_1 = Cachorro("Au Au", "vira_lata")
+print(Cachorro_1)
+print(Cachorro_1.morrer())
+print(Cachorro_1.latir())
+
+gato_1 = Gato("preta", "vira-lata")
+print(gato_1)
+print(gato_1.miar())
+print(gato_1.morrer())
+print(Cachorro_1.__repr__())
+
+    
