@@ -8,7 +8,23 @@ from sklearn.metrics import accuracy_score, classification_report
 dados = pd.read_csv("df_filt.csv")
 teste = pd.read_csv("df_test.csv")
 
-print(dados.info())
+dados["Timestamp"] = pd.to_datetime(dados["Timestamp"])
+dados["segundo"] = dados["Timestamp"].dt.floor("S")
+
+dados = dados.drop(columns=["Type", "Position", "Breed", "Subject", "Timestamp"])
+
+grouped = dados.groupby("segundo")
+
+features = pd.DataFrame()
+
+for col in dados.columns[:-1]:
+    _ = grouped[col].describe()
+    features[f"{col}_mean"] = _["mean"]
+    features[f"{col}_std"] = _["std"]
+
+
+
+
 
 
 
