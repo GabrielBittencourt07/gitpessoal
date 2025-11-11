@@ -4,9 +4,10 @@ from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
+import Tentativa_de_fazer_com_OO as mod
 
-dados = pd.read_csv("df_filt.csv")
-teste = pd.read_csv("df_test.csv")
+dados = mod.DadosIMU(pd.read_csv("df_filt.csv"))
+teste = mod.DadosIMU(pd.read_csv("df_test.csv"))
 
 dados["Timestamp"] = pd.to_datetime(dados["Timestamp"])
 dados["segundo"] = dados["Timestamp"].dt.floor("S")

@@ -4,25 +4,31 @@ from sklearn.ensemble import RandomForestClassifier
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
-
+import Tentativa_de_fazer_com_OO as mod
 
 dados = pd.read_csv("df_filt.csv")
 teste = pd.read_csv("df_test.csv")
 
-dados_group = dados.groupby("Subject").count()
+dados = mod.DadosIMU(dados)
+
+print(dados.amostras_posições())
+print(dados.amostras_caes())
+
+# dados_group = dados.groupby("Subject").count()
 # print(dados_group)
 # print(dados_group.describe())
-dados_group = dados.groupby("Position").count()
+# dados_group = dados.groupby("Position").count()
 # print(dados_group)
 # print(dados_group.describe())
 # Body shake tem muito menos dados que o restante das categorias. Por outro lado, standing foi a categoria de maior quantidade de dados. A média geral é de 60380. 
-#print(dados.info())
+# print(dados.info())
 
 y_train = dados["Position"]
-x_train = dados.drop(columns=["Position", "Timestamp", "Type", "Breed", "Subject"])
+x_train = mod.DadosIMU(dados).dados_num() # Ao aplicar funções da minha classe que retornam um DataFrame (dados_num() é um exemmplo disso) o objeto deixa de se referir a minha classe e passa a ser um DataFrame
+# print(x_train.amostras_caes()) # Não da KeyError como eu esperava, mas sim AttributeError já que x_train é um DataFrame e não um DadosIMU 
 
 y_teste = teste["Position"]
-x_teste = teste.drop(columns=["Position", "Timestamp", "Type", "Breed", "Subject"])
+x_teste = mod.DadosIMU(teste).dados_num()
 
 rf = RandomForestClassifier(
     n_estimators=100,       # número de árvores
