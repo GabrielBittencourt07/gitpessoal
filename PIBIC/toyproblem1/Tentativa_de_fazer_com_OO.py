@@ -1,6 +1,5 @@
 import pandas as pd 
 
-
 class DadosIMU(pd.DataFrame): 
     def __init__(self, data):
         super().__init__(data)
@@ -21,7 +20,6 @@ class DadosIMU(pd.DataFrame):
 
     def Z(self): 
         return self.get_axis("Z")
-    
     
     def amostras_caes(self): #Retorna um dicionário cuja as chaves são os ID's de identificação dos cães e os valores a contagem de amostras de cada um  
         return self.groupby("Subject").size().to_dict()

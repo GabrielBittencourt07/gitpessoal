@@ -9,11 +9,8 @@ if __name__ == "__main__":
     dogs = pd.read_csv("df_dogs.csv")
     raw = pd.read_csv("df_raw.csv")
 
-    print(pd.unique(raw["Subject"]))    
-
     dataset_teste = mod.DadosIMU(raw).dados_teste()
     dataset_menor = mod.DadosIMU(raw).dados_filt()
-    
     
     dataset_teste.to_csv("df_filt.csv", index = False)
     dataset_teste.to_csv("df_test.csv", index = False)
