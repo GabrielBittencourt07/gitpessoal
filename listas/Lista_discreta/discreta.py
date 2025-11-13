@@ -44,7 +44,26 @@ def funcao_lista(lista_arestas: List) -> Tuple[NDArray, NDArray]:
     return (matriz_adj, matriz_inc)
 
 def funcao_adj(matriz_adj: NDArray) -> Tuple[List, NDArray]:
-    pass
+    matriz_adj = np.array(matriz_adj)
+    n,n = matriz_adj.shape
+
+    #=============== LISTA DE ARESTAS =================
+
+    i, j = np.where(np.triu(matriz_adj) > 0)
+    lista_arestas = list(zip(i,j))
+
+    #============= MATRIZ DE INCIDENCIA ================
+
+    m = len(lista_arestas)
+    matriz_inc = np.zeros(n,m)
+    ind_aresta = 0
+    for aresta in lista_arestas:
+        i1, i2 = aresta 
+        matriz_inc[i1, ind_aresta] += 1
+        matriz_inc[i2, ind_aresta] += 1
+        ind_aresta += 1
+
+    return(lista_arestas, matriz_inc)
 
 
 def executar(objeto: List | NDArray):
