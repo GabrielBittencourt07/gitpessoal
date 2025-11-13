@@ -23,27 +23,46 @@ for col in dados.columns[:-1]:
     features[f"mean_{col}"] = _["mean"]
     features[f"std_{col}"] = _["std"]
 
-eixos = ("X", "Y", "Z")
 
-def get_axis(axis: str, dataframe: pd.DataFrame) -> pd.DataFrame:
+def get_axis_mean(ax: str, dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe_ax_mean = pd.DataFrame()
     dataframe_ax_std = pd.DataFrame()
-    for ax in axis:
-        for col in dataframe: 
-            if col.endswith(ax):
-                if col.startswith("mean"):
-                    dataframe_ax_mean[col] = dataframe[col]
-                else: 
-                    dataframe_ax_std[col] = dataframe[col]
-    
-    dataframe_ax_mean = dataframe_ax_mean.reset_index().groupby("segundo").mean()
-        
-    return dataframe_ax_mean
-           
-#for eixo in eixos: 
-#    get_axis(eixo, features)
 
-print(get_axis("X", features))
+    for col in dataframe: 
+        if col.endswith(ax):
+            if col.startswith("mean"):
+                dataframe_ax_mean[col] = dataframe[col]
+            else: 
+                dataframe_ax_std[col] = dataframe[col]
+    
+    dataframe_ax_mean = dataframe_ax_mean.mean(axis = 1 )
+    dataframe_ax_std = dataframe_ax_std.mean(axis = 1 )
+        
+    return pd.DataFrame({f"mean_media_{ax}": dataframe_ax_mean, f"mean_Desviopadrao_{ax}": dataframe_ax_std})
+
+def get_axis_sum(ax: str, dataframe: pd.DataFrame) -> pd.DataFrame: 
+    dataframe_ax_std = pd.DataFrame()
+
+    for col in dataframe: 
+        if col.endswith(ax):
+            if col.startswith("std"):
+                dataframe_ax_std[col] = dataframe[col]
+            
+    dataframe_ax_sum_std = dataframe_ax_std.sum(axis = 1 )
+
+    return pd.DataFrame({f"soma_std_{ax}":dataframe_ax_sum_std})
+
+
+           
+eixos = ("X", "Y", "Z")
+
+sum_std_ax = pd.DataFrame()
+mean_std = pd.DataFrame()
+for ax in eixos:
+    mean_std = get_axis_mean(ax, features).join(mean_std)
+    sum_std_ax = get_axis_sum(ax, features).join(sum_std_ax)
+
+print(sum_std_ax)
 
 
 
