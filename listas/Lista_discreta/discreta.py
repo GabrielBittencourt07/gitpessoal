@@ -16,23 +16,24 @@ def funcao_lista(lista_arestas: List) -> Tuple[NDArray, NDArray]:
             lista_vertices.append(v1)
         if v2 not in lista_vertices: 
             lista_vertices.append(v2)
-            
+    lista_vertices = sorted(lista_vertices)
 
     #============ MATRIZ ADJACÊNCIA ============= 
 
-    matriz_adj = np.zeros((len(lista_vertices), len(lista_vertices)))
+    n = len(lista_vertices)
+    matriz_adj = np.zeros((n, n))
 
     for v1, v2 in lista_arestas: 
         ind_v1 = lista_vertices.index(v1)
         ind_v2 = lista_vertices.index(v2)
         matriz_adj[ind_v1][ind_v2] += 1 
+        matriz_adj[ind_v2][ind_v1] += 1
         
-        if v1 == v2: 
-            matriz_adj[ind_v1][ind_v2] += 1 
+
 
     #============ MATRIZ INCIDÊNCIA ============= 
-
-    matriz_inc = np.zeros((len(lista_vertices), len(lista_arestas)))
+    m = len(lista_arestas)
+    matriz_inc = np.zeros((n, m))
 
     for aresta in lista_arestas: 
         ind_a = lista_arestas.index(aresta)
@@ -40,29 +41,36 @@ def funcao_lista(lista_arestas: List) -> Tuple[NDArray, NDArray]:
             ind_v = lista_vertices.index(vertice)
             matriz_inc[ind_v][ind_a] += 1 
 
-    return matriz_adj, matriz_inc
+    return (matriz_adj, matriz_inc)
 
+def funcao_adj(matriz_adj: NDArray) -> Tuple[List, NDArray]:
+    pass
 
 
 def executar(objeto: List | NDArray):
     for i in objeto: 
-        if isinstance(i, tuple): #Verifica se é uma lista com as arestas do grafo. 
-            pass
+        if isinstance(i, Tuple): #Verifica se é uma lista com as arestas do grafo. 
+            return funcao_lista(objeto)
 
+        elif isinstance(i, List): #Verifica se é uma Array(Matriz)
+            matriz = np.array(objeto)
+            n,m = matriz.shape
 
-        elif isinstance(i, List): #Verifica se é uma Array(Matriz).
-            for j in i: 
-                if isinstance(j, int): #Verifica se é uma Matriz de 
-                    pass
+            if n != m: #Matriz retangular implica nela ser uma matriz de incidencia.
+                return #funcao_inc(objeto)
 
-            pass
+            elif matriz == np.transpose(matriz): #Matriz de adjacencia necessariamente é simétrica (para grafos não direcionados).
+                return #funcao_adj(objeto)
+            else:
+                return #funcao_inc(objeto)    
+
         else: 
             raise ValueError("Dado no formato inválido")
         
 
-list = [(0,1), (2,4), (2,5), (1,2), (3,1), (3,4), (3,1), (0,0), (3,5)]
+list = [(0,1), (2,4), (2,5), (1,2), (3,1), (3,4), (0,0), (3,5)]
 
-print(funcao_lista(list))
+print(executar(list))
 
 
 
