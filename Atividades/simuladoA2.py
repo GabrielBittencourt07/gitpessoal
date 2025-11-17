@@ -95,7 +95,7 @@ class Usuario(BookMatch):
         self._livros_usuario.append(livro)
 
 
-    def analisetransacoes(self):
+    def transacoes(self):
         for transacao in self._transacoes: 
             print(f"[Transação {self._transacoes.index(transacao)}] {transacao.analisartransacao}\n")
 
@@ -129,6 +129,11 @@ class Usuario(BookMatch):
 
     def cancelarsolicitacaodetroca(self, index_transacao: int):
         self._transacoes[index_transacao].cancelartransacao()
+
+    def verificartrocaspendentes(self):
+        for transacao in self._transacoes: 
+            if transacao.status == "pendente":
+                print(transacao.analisartransacao)
 
     @property
     def usuarios_para_avaliar(self): 
@@ -167,7 +172,60 @@ class Usuario(BookMatch):
         return np.mean(self._notas)
     
 
-    
 
+print("--- INICIANDO SIMULAÇÃO BOOKMATCH ---")
+
+# 1. Instanciar Usuários
+usuario_a = Usuario("Alice_Leitora")
+usuario_b = Usuario("Bob_TrocaFácil")
+print(f"Usuários criados: {usuario_a._nome_usuario} e {usuario_b._nome_usuario}")
+
+# 2. Instanciar Livros
+livro_a_pedido = Livro("Duna", "Frank Herbert", "Ficção Científica")
+livro_b_oferecido = Livro("1984", "George Orwell", "Distopia")
+livro_c_extra = Livro("Cem Anos de Solidão", "G.G. Márquez", "Realismo Mágico")
+
+# 3. Adicionar Livros ao Acervo dos Usuários
+usuario_b.adicionarlivro(livro_a_pedido)  # Bob tem o livro que Alice quer
+usuario_a.adicionarlivro(livro_b_oferecido) # Alice tem o livro que oferece
+usuario_a.adicionarlivro(livro_c_extra)
+
+print("\n--- STATUS DO ACERVO GERAL ---")
+print(f"Livros no acervo (global): {BookMatch.lista_livros}")
+print("-" * 35)
+
+# 4. Alice solicita a troca (Livro A PEDIDO, Livro B OFERECIDO)
+# Alice está solicitando Duna de Bob, e oferece 1984.
+try:
+    # Alice tenta trocar o livro que ela oferece (1984) pelo livro que ela quer (Duna)
+    # A lógica atual do solicitartrocas é complexa, mas vamos simular a busca.
+    # Nota: A função solicitartrocas inicia transações com todos que tem o livro.
+    # Estamos assumindo que a transação é criada entre Alice e Bob.
     
+    # Execução real: Alice solicita o livro "Duna"
+    usuario_a.solicitartrocas(livro1=livro_a_pedido, livro2=livro_b_oferecido)
+    print(f"SOLICITAÇÃO: Alice solicitou 'Duna' (de Bob), oferecendo '1984'.")
+
+except KeyError as e:
+    print(f"Erro: {e}")
+
+# 5. Análise da Transação (Ambos os lados)
+# Deve haver uma transação pendente na lista de ambos.
+
+print("\n--- ANÁLISE DAS TRANSAÇÕES PENDENTES (Lado de Bob) ---")
+# Bob é o solicitado. Ele vê a solicitação de Alice.
+usuario_b.verificartrocaspendentes() 
+
+# 6. Bob aceita a transação (Bob é o solicitado)
+# Bob é o usuário 2, ele tem permissão para aceitar.
+index_transacao_bob = 0 # Assume que é a primeira e única transação na lista de Bob
+usuario_b.aceitarsolicitacoesdetroca(index_transacao_bob)
+
+# 7. Verificação do Status Final
+print(f"STATUS FINAL DA TRANSAÇÃO: {usuario_b._transacoes[index_transacao_bob].status}")
+
+# 8. Verificação do Sistema de Avaliação (Usuários aptos)
+print("\n--- AVALIAÇÃO ---")
+print(f"Alice deve avaliar: {usuario_a.usuarios_para_avaliar}")
+print(f"Bob deve avaliar: {usuario_b.usuarios_para_avaliar}")
 
